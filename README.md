@@ -12,6 +12,10 @@ poetry run python loconotion ../building_on_slack.toml
 ```
 This could be automated with GitHub Actions, but for now why automate a task that only takes a minute a week at max. Bigger fish out there to fry.
 
+## Testing locally
+
+It's a static site, just open the page in the browser. If you want to test more completely, Netlify enables you to run their entire stack locally with [Netlify Dev](https://www.netlify.com/products/dev/), just need to install their CLI.
+
 ## Design
 
 Notion handles the fiddly bits, but I still have to make it look not dumb. Good example site
