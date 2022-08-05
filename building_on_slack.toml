@@ -4,29 +4,25 @@
 
 # name of the folder inside `dist/` where site will start
 name = "building_on_slack"
-
-page = "https://www.notion.so/BuildingOnSlack-com-fc3fd8d839ff478ca5f61309b903666a"
-
+# ⚠ if you use the old style of shared page link (notion.so/blah-blah), it will go 💥
+page = "https://kqu.notion.site/BuildingOnSlack-com-fc3fd8d839ff478ca5f61309b903666a"
 theme = "dark"
-
-# functional
-# raw_html = """
-# <script async defer data-domain="buildingonslack.com" src="https://plausible.io/js/plausible.js"></script>
-# <p>FIND ME</p>
-# """
-# TODO: this PR does similar as well https://github.com/leoncvlt/loconotion/pull/60/files
-# IT does not appear the guy is open to new PRs, several are sitting without comments
-
+extension_in_links = false
 
 [site]
+[[site.meta]]
+name = "title"
+content = "Building on Slack"
+[[site.meta]]
+name = "description"
+content = "Learn how others are building on Slack, from small teams to large enterprises."
+
 [[site.inject.body.script]]
-src="https://plausible.io/js/plausible.js"
+data-domain="buildingonslack.com"
+src="https://innocuous.idontremember.workers.dev/akgdfdsaf/script.js"
+data-api="https://innocuous.idontremember.workers.dev/zzvcvfdfef/event" 
 async=""
 defer=""
-data-domain="buildingonslack.com"
 
 [pages]
-# TODO: pretty urls and whatnot
-[pages.fc3fd8d839ff478ca5f61309b903666a]
-slug = "home"
-# no-links = true
+

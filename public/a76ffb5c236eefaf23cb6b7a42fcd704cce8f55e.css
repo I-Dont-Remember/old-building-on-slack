@@ -1,3 +1,6 @@
+/*!****************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/client/css/fonts.css ***!
+  \****************************************************************************/
 @font-face {
     font-family: "Lyon-Text";
     src: url(lyon-text-regular-3be84b20b1d9ff1e3456b0a220ae449b.woff);
@@ -76,6 +79,9 @@
     font-style: normal;
     font-weight: 400
     }
+/*!****************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/client/css/katex.css ***!
+  \****************************************************************************/
 .notion-frame .katex-display .katex {
     padding-right: 32px
     }
@@ -91,6 +97,9 @@
     /* katex.css sets this to 1.2, which causes baseline jitter. */
     line-height: 1
     }
+/*!********************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/client/css/normalize.css ***!
+  \********************************************************************************/
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 /**
  * 1. Set default font family to sans-serif.
@@ -413,6 +422,9 @@ table {
 td, th {
     padding: 0
     }
+/*!*****************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/client/css/notion.css ***!
+  \*****************************************************************************/
 /* ==================================================================== */
 /* Hover Feedback */
 /* ==================================================================== */
@@ -432,33 +444,19 @@ td, th {
 .notion-token-remove-button:hover {
     opacity: 0.8
     }
-.notion-page-mention-token {
+.notion-notion-external-object, .notion-page-mention-token {
     box-shadow: 0 0 0 3px rgba(148, 148, 148, 0)
     }
-.notion-page-mention-token.notion-enable-hover:hover {
+.notion-page-mention-token.notion-enable-hover:hover, .notion-external-object-token.notion-enable-hover:hover {
+    cursor: pointer !important;
     background: rgba(148, 148, 148, 0.15);
     box-shadow: 0 0 0 3px rgba(148, 148, 148, 0.15);
     border-radius: 1px
     }
-.notion-page-mention-token.notion-enable-hover:hover {
-    background: rgba(148, 148, 148, 0.15);
-    box-shadow: 0 0 0 3px rgba(148, 148, 148, 0.15);
-    border-radius: 1px
-    }
-/* required to correctly highligt the icons within a page mention token */
-.notion-page-mention-token::selection {
+/* required to correctly highlight the icons within a page/external object
+mention token. */
+.notion-page-mention-token::selection, .notion-external-object-token::selection {
     background: rgba(46, 170, 220, 0.2)
-    }
-.notion-link-token span {
-    transition: border-color 100ms ease-in, opacity 100ms ease-in
-    }
-.notion-link-token.notion-enable-hover:hover span {
-    border-color: currentColor !important;
-    opacity: 1 !important
-    }
-.dark .notion-link-token.notion-enable-hover:hover span {
-    border-color: currentColor !important;
-    opacity: 1 !important
     }
 /* ==================================================================== */
 /* Focus Feedback */
@@ -466,6 +464,8 @@ td, th {
 .notion-focusable {
     transition: box-shadow 300ms
     }
+/* NOTE: do not try to combine these next two rules, if you do, it will
+   break the blue focus ring on Safari */
 .notion-focusable-within:focus-within {
     box-shadow: rgba(46, 170, 220, 0.7) 0 0 0 1px inset, rgba(46, 170, 220, 0.4) 0 0 0 2px !important
     }
@@ -563,10 +563,8 @@ html.notion-front-page .notion-app-inner {
 /* ==================================================================== */
 /* Contenteditable placeholders.
 /* ==================================================================== */
-[contenteditable]:empty:before {
-    content: attr(placeholder);
-    display: block;
-    /* For Firefox */
+[contenteditable]:empty:after, .forcePlaceholder:after {
+    content: attr(placeholder)
     }
 /* ==================================================================== */
 /* Intercom.
@@ -611,6 +609,34 @@ html.notion-front-page .notion-app-inner {
         } 100% {
         -webkit-transform: rotate(360deg) translateZ(0);
         transform: rotate(360deg) translateZ(0);
+        }
+    }
+/* ==================================================================== */
+/* Sidebar loading skeleton shimmer
+/* ==================================================================== */
+.notion-sidebar-loading-skeleton-shimmer {
+    overflow: hidden;
+    position: relative
+    }
+.notion-sidebar-loading-skeleton-shimmer::before {
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    animation: shimmer 1s infinite
+    }
+.notion-light-theme .notion-sidebar-loading-skeleton-shimmer::before {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%)
+    }
+.notion-dark-theme .notion-sidebar-loading-skeleton-shimmer::before {
+    background: linear-gradient(90deg, rgba(86, 86, 86, 0) 0%, rgba(86, 86, 86, 0.4) 50%, rgba(86, 86, 86, 0) 100%)
+    }
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+        } 100% {
+        transform: translateX(100%);
         }
     }
 /* ==================================================================== */
@@ -666,25 +692,44 @@ html.notion-front-page .notion-app-inner {
     display: none !important
     }
 /* ==================================================================== */
-/* Customizable class utilities.
- * see shared/cssHelpers.ts
- *
- * Use css variables to customize styles for pesudoselectors we
- * can't easily target from inline style properties.
- *
- * Each class defined below should be added to customizableClassnameHelpers.ts.
- * For each CSS property, use var(`--${className}--${propertyName}`) as the value.
- *
- * We use camelCase names here so they're easier to write in Typescript.
- * TODO: use something like linaria to automate this shenanigans.
+/* input-hide-arrows.
 /* ==================================================================== */
-@keyframes leftoright {
+/* Chrome, Safari, Edge, Opera */
+input.input-hide-arrows::-webkit-outer-spin-button, input.input-hide-arrows::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0
+    }
+/* Firefox */
+input[type="number"].input-hide-arrows {
+    -moz-appearance: textfield
+    }
+@keyframes leftOrRight {
     from {
         left: -50%;
         } to {
         left: 250%;
         }
     }
+/* ==================================================================== */
+/* Customizable class utilities.
+ * see shared/cssHelpers.ts
+ *
+ * Use css variables to customize styles for pesudoselectors we
+ * can't easily target from inline style properties.
+ *
+ * Each class defined below should be added to CustomizableClasses in cssHelpers.ts.
+ * For each CSS property, use var(`--${className}--${propertyName}`) as the value.
+ *
+ * We use camelCase names here so they're easier to write in Typescript.
+ * TODO: use something like linaria to automate this shenanigans.
+/* ==================================================================== */
+/** Conditional style when self is contentEditable */
+/** Conditional style when a content-editable root is editable */
+/** Conditional style when an element is or is inside a focused contentEditable. */
+/** Conditional styles for :after when we are composing text */
+/*!*************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/client/css/react-datetime.css ***!
+  \*************************************************************************************/
 /*!
  * https://github.com/arqex/react-datetime
  */
@@ -841,6 +886,9 @@ td.rdtMonth:hover, td.rdtYear:hover {
     font-size: 1.2em;
     margin-top: 37px
     }
+/*!****************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/client/css/reset.css ***!
+  \****************************************************************************/
 *, *:focus {
     outline: 0
     }
@@ -893,6 +941,9 @@ table > tr {
 [contenteditable] {
     -webkit-tap-highlight-color: transparent
     }
+/*!*******************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/client/css/tutorial.css ***!
+  \*******************************************************************************/
 @keyframes pulse-ring {
     0% {
         transform: scale(0.33);
@@ -918,6 +969,9 @@ table > tr {
         transform: translateX(0%);
         }
     }
+/*!********************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/client/css/keyframes.css ***!
+  \********************************************************************************/
 /* Onboarding animations */
 @keyframes pulsing-button-border {
     0% {
@@ -937,12 +991,37 @@ table > tr {
         filter: brightness(1);
         }
     }
+/*!****************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/client/css/front.css ***!
+  \****************************************************************************/
 .front-fadein-slow {
     animation: fadein ease-in 500ms
     }
 .front-fadein-fast {
     animation: fadein ease-in 150ms
     }
+/*!*************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/client/css/hide-scrollbar.css ***!
+  \*************************************************************************************/
+/**
+ * Utility to hide scrollbars while retaining scroll functionality.
+ * This can't be done with React inline styles because of the
+ * ::-webkit-scrollbar pseudo-element selector.
+*/
+.hide-scrollbar {
+    /* Hide scrollbars in IE 10+. */
+    -ms-overflow-style: none;
+    /* Hide scrollbar in FF. */
+    scrollbar-width: none
+    }
+/* Hide scrollbar for Chrome/Safari/Webkit browsers. */
+.hide-scrollbar::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important
+    }
+/*!****************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/client/css/prism.css ***!
+  \****************************************************************************/
 /* WARNING: This is a generated file. Do not touch! */
 /* Run `notion build-prism` to rebuild. */
 /**
@@ -1122,121 +1201,9 @@ table > tr {
 .notion-dark-theme .token.deleted {
     color: red
     }
-/* =============================================================================
-
-	react-day-picker.css.
-	Prefix everything with #notion-app to increase the precedence of these rules
-	so they will always override the default CSS regardless of the order in which
-	they are concatenated.
-
-// ========================================================================== */
-/* =============================================================================
-	Desktop Styles.
-============================================================================= */
-#notion-app .DayPicker-Day {
-    border-radius: 3px
-    }
-#notion-app .DayPicker-Day.DayPicker-Day--range {
-    border-radius: 0
-    }
-#notion-app .DayPicker-Day.DayPicker-Day--range.DayPicker-Day--start {
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px
-    }
-#notion-app .DayPicker-Day.DayPicker-Day--range.DayPicker-Day--end {
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px
-    }
-#notion-app .DayPicker-Day.DayPicker-Day--range.DayPicker-Day--start.DayPicker-Day--end {
-    border-radius: 3px
-    }
-#notion-app .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside), #notion-app .DayPicker-Day--value:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
-    background: rgb(45, 170, 219);
-    /* Notion blue */
-    color: #fff
-    }
-#notion-app .DayPicker:not(.DayPicker--interactionDisabled) .DayPicker-Day--outside:hover, #notion-app .DayPicker:not(.DayPicker--interactionDisabled) .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--value):not(.DayPicker-Day--start):not(.DayPicker-Day--end):hover {
-    background-color: rgba(45, 156, 219, 0.2);
-    border-radius: 3px;
-    cursor: pointer
-    }
-#notion-app .DayPicker-Months {
-    font-size: 14px
-    }
-#notion-app .DayPicker-Day--today:not(.DayPicker-Day--selected):not(.DayPicker-Day--value):not(.DayPicker-Day--start):not(.DayPicker-Day--end) {
-    position: relative;
-    color: white;
-    z-index: 1
-    }
-#notion-app .DayPicker-Day--today {
-    color: inherit
-    }
-#notion-app .DayPicker-Day--today:not(.DayPicker-Day--selected):not(.DayPicker-Day--value):not(.DayPicker-Day--start):not(.DayPicker-Day--end)::after {
-    content: "";
-    display: block;
-    width: 26px;
-    height: 26px;
-    background: rgb(235, 87, 87);
-    border-radius: 100%;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate3d(-50%, -50%, 0);
-    z-index: -1
-    }
-#notion-app .DayPicker-Caption > div {
-    font-size: 14px;
-    font-weight: 500
-    }
-#notion-app .DayPicker-Month {
-    margin: 0
-    }
-#notion-app .DayPicker-wrapper {
-    padding-bottom: 0
-    }
-#notion-app .DayPicker-Week, #notion-app .DayPicker-WeekdaysRow {
-    display: flex
-    }
-#notion-app .DayPicker-Weekdays {
-    display: block;
-    margin-top: 0
-    }
-#notion-app .DayPicker-Caption {
-    margin-bottom: 8px
-    }
-#notion-app .DayPicker-Weekday, #notion-app .DayPicker-Day {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 30px;
-    line-height: 1.2
-    }
-/* =============================================================================
-	Mobile Styles.
-============================================================================= */
-@media only screen and (max-width: 600px) {
-    #notion-app .DayPicker-Months, #notion-app .DayPicker-Caption > div {
-        font-size: 16px
-        }
-    #notion-app .DayPicker-Month, #notion-app .DayPicker {
-        width: 100%
-        }
-    #notion-app .DayPicker-Weekday, #notion-app .DayPicker-Day {
-        flex-grow: 1
-        }
-    #notion-app .DayPicker-Weekday, #notion-app .DayPicker-Day {
-        height: 44px
-        }
-    #notion-app .DayPicker-Caption {
-        padding-left: 4%;
-        margin-top: 4px
-        }
-    #notion-app .DayPicker-Day--today:not(.DayPicker-Day--selected):not(.DayPicker-Day--value):not(.DayPicker-Day--range)::after {
-        width: 32px;
-        height: 32px
-        }
-    }
+/*!********************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/client/css/react-pdf.css ***!
+  \********************************************************************************/
 .react-pdf__Page {
     padding-bottom: 8px
     }

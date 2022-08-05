@@ -1,5 +1,5 @@
 [build]
 
-publish = "dist/building_on_slack/"
+publish = "public/"
 
 

@@ -1,0 +1,14 @@
+build-bos:
+	poetry run python loconotion -v --chromedriver '/usr/bin/chromedriver' building-on-slack/building_on_slack.toml \
+	&& rm -rf building-on-slack/public/* \
+	&& mv dist/building_on_slack/* building-on-slack/public/
+
+build-bos-clean:
+	poetry run python loconotion -v --clean --chromedriver '/usr/bin/chromedriver' building-on-slack/building_on_slack.toml \
+	&& mv dist/building_on_slack/* building-on-slack/public/
+
+build-indielurker:
+	poetry run python loconotion -v --chromedriver '/usr/bin/chromedriver' indielurker/indielurker-loconotion.toml \
+	&& rm -rf indielurker/public/* \
+	&& mv dist/indielurker/* indielurker/public/
+
